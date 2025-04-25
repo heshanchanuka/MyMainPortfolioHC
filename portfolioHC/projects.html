@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects | Your Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Filter functionality
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const projectItems = document.querySelectorAll(".project-item");
+
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            // Update active button
+            filterButtons.forEach((btn) =>
+              btn.classList.remove("bg-blue-600", "text-white")
+            );
+            button.classList.add("bg-blue-600", "text-white");
+
+            const filter = button.getAttribute("data-filter");
+
+            // Filter projects
+            projectItems.forEach((item) => {
+              if (filter === "all") {
+                item.classList.remove("hidden");
+              } else {
+                const categories = item
+                  .getAttribute("data-category")
+                  .split(" ");
+                if (categories.includes(filter)) {
+                  item.classList.remove("hidden");
+                } else {
+                  item.classList.add("hidden");
+                }
+              }
+            });
+          });
+        });
+
+        // Modal functionality
+        const modalOpenButtons = document.querySelectorAll(".modal-open");
+        const modalCloseButtons = document.querySelectorAll(".modal-close");
+        const modals = document.querySelectorAll(".modal");
+
+        modalOpenButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const targetId = button.getAttribute("data-target");
+            const targetModal = document.getElementById(targetId);
+            targetModal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+          });
+        });
+
+        modalCloseButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const modal = button.closest(".modal");
+            modal.classList.add("hidden");
+            document.body.style.overflow = "auto";
+          });
+        });
+
+        // Close modal when clicking outside of content
+        modals.forEach((modal) => {
+          modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+              modal.classList.add("hidden");
+              document.body.style.overflow = "auto";
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+  <body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav
+      class="fixed w-full bg-gray-900 bg-opacity-90 z-50 border-b border-gray-800"
+    >
+      <div
+        class="container mx-auto px-6 py-3 flex justify-between items-center"
+      >
+        <a href="index.html" class="text-2xl font-bold text-blue-400"
+          >YourName<span class="text-white">.dev</span></a
+        >
+        <div class="hidden md:flex space-x-8">
+          <a href="index.html" class="hover:text-blue-300 transition">Home</a>
+          <a href="about.html" class="hover:text-blue-300 transition">About</a>
+          <a
+            href="projects.html"
+            class="text-blue-400 hover:text-blue-300 transition"
+            >Projects</a
+          >
+          <a href="contacts.html" class="hover:text-blue-300 transition"
+            >Contact</a
+          >
+          <a href="admin.html" class="hover:text-blue-300 transition">Admin</a>
+        </div>
+        <div class="md:hidden">
+          <button class="text-white focus:outline-none">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="pt-24 pb-12 bg-gray-800">
+      <div class="container mx-auto px-6">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">My Projects</h1>
+        <p class="text-gray-400">
+          Showcasing my work in electronics, programming, and more
+        </p>
+      </div>
+    </header>
+
+    <!-- Filter Controls -->
+    <section class="py-10 border-b border-gray-800">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-wrap justify-center gap-4">
+          <button
+            class="filter-btn bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+            data-filter="all"
+          >
+            All Projects
+          </button>
+          <button
+            class="filter-btn bg-gray-700 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+            data-filter="hardware"
+          >
+            Hardware
+          </button>
+          <button
+            class="filter-btn bg-gray-700 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+            data-filter="software"
+          >
+            Software
+          </button>
+          <button
+            class="filter-btn bg-gray-700 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+            data-filter="web"
+          >
+            Web
+          </button>
+          <button
+            class="filter-btn bg-gray-700 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+            data-filter="iot"
+          >
+            IoT
+          </button>
+          <button
+            class="filter-btn bg-gray-700 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+            data-filter="ai"
+          >
+            AI/ML
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="py-16">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Project 1 -->
+          <div
+            class="project-item bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+            data-category="hardware iot"
+          >
+            <img
+              src="/api/placeholder/600/400"
+              alt="Smart Home System"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-6">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="text-xs bg-blue-600 px-2 py-1 rounded-full"
+                  >IoT</span
+                >
+                <span class="text-xs bg-green-600 px-2 py-1 rounded-full"
+                  >Hardware</span
+                >
+              </div>
+              <h3 class="text-xl font-bold mb-2">
+                Smart Home Automation System
+              </h3>
+              <p class="text-gray-400 mb-4">
+                Arduino-based home automation with mobile app control for
+                lighting, temperature, and security.
+              </p>
+              <button
+                class="modal-open text-blue-400 hover:text-blue-300 flex items-center"
+                data-target="project1-modal"
+              >
+                Learn More
+                <i class="fas fa-arrow-right ml-2"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div
+            class="project-item bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+            data-category="software ai"
+          >
+            <img
+              src="/api/placeholder/600/400"
+              alt="Machine Learning Project"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-6">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="text-xs bg-purple-600 px-2 py-1 rounded-full"
+                  >AI/ML</span
+                >
+                <span class="text-xs bg-yellow-600 px-2 py-1 rounded-full"
+                  >Software</span
+                >
+              </div>
+              <h3 class="text-xl font-bold mb-2">Image Recognition System</h3>
+              <p class="text-gray-400 mb-4">
+                Deep learning project for real-time object detection using
+                Python and TensorFlow.
+              </p>
+              <button
+                class="modal-open text-blue-400 hover:text-blue-300 flex items-center"
+                data-target="project2-modal"
+              >
+                Learn More
+                <i class="fas fa-arrow-right ml-2"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div
+            class="project-item bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+            data-category="web software"
+          >
+            <img
+              src="/api/placeholder/600/400"
+              alt="Course Management System"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-6">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="text-xs bg-red-600 px-2 py-1 rounded-full"
+                  >Web</span
+                >
+                <span class="text-xs bg-yellow-600 px-2 py-1 rounded-full"
+                  >Software</span
+                >
+              </div>
+              <h3 class="text-xl font-bold mb-2">
+                University Course Management System
+              </h3>
+              <p class="text-gray-400 mb-4">
+                MERN stack web application for managing university courses,
+                students, and grades.
+              </p>
+              <button
+                class="modal-open text-blue-400 hover:text-blue-300 flex items-center"
+                data-target="project3-modal"
+              >
+                Learn More
+                <i class="fas fa-arrow-right ml-2"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 4 -->
+          <div
+            class="project-item bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+            data-category="hardware"
+          >
+            <img
+              src="/api/placeholder/600/400"
+              alt="Digital Oscilloscope"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-6">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="text-xs bg-green-600 px-2 py-1 rounded-full"
+                  >Hardware</span
+                >
+              </div>
+              <h3 class="text-xl font-bold mb-2">Digital Oscilloscope</h3>
+              <p class="text-gray-400 mb-4">
+                Custom-built digital oscilloscope using a microcontroller and
+                LCD display.
+              </p>
+              <button
+                class="modal-open text-blue-400 hover:text-blue-300 flex items-center"
+                data-target="project4-modal"
+              >
+                Learn More
+                <i class="fas fa-arrow-right ml-2"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 5 -->
+          <div
+            class="project-item bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+            data-category="iot software"
+          >
+            <img
+              src="/api/placeholder/600/400"
+              alt="Weather Station"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-6">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="text-xs bg-blue-600 px-2 py-1 rounded-full"
+                  >IoT</span
+                >
+                <span class="text-xs bg-yellow-600 px-2 py-1 rounded-full"
+                  >Software</span
+                >
+              </div>
+              <h3 class="text-xl font-bold mb-2">IoT Weather Station</h3>
+              <p class="text-gray-400 mb-4">
+                ESP32-based weather station that collects and visualizes
+                environmental data.
+              </p>
+              <button
+                class="modal-open text-blue-400 hover:text-blue-300 flex items-center"
+                data-target="project5-modal"
+              >
+                Learn More
+                <i class="fas fa-arrow-right ml-2"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Project 6 -->
+          <div
+            class="project-item bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+            data-category="web"
+          >
+            <img
+              src="/api/placeholder/600/400"
+              alt="Portfolio Website"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-6">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="text-xs bg-red-600 px-2 py-1 rounded-full"
+                  >Web</span
+                >
+              </div>
+              <h3 class="text-xl font-bold mb-2">Portfolio Website</h3>
+              <p class="text-gray-400 mb-4">
+                Personal portfolio website built with HTML, CSS, JavaScript, and
+                Tailwind CSS.
+              </p>
+              <button
+                class="modal-open text-blue-400 hover:text-blue-300 flex items-center"
+                data-target="project6-modal"
+              >
+                Learn More
+                <i class="fas fa-arrow-right ml-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Modals -->
+    <!-- Project 1 Modal -->
+    <div
+      id="project1-modal"
+      class="modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-gray-800 rounded-lg w-full max-w-4xl max-h-screen overflow-y-auto"
+      >
+        <div class="p-6 md:p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Smart Home Automation System</h3>
+            <button class="modal-close text-gray-400 hover:text-white">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          <img
+            src="/api/placeholder/800/400"
+            alt="Smart Home System"
+            class="w-full rounded-lg mb-6"
+          />
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="text-xs bg-blue-600 px-2 py-1 rounded-full">IoT</span>
+            <span class="text-xs bg-green-600 px-2 py-1 rounded-full"
+              >Hardware</span
+            >
+            <span class="text-xs bg-gray-600 px-2 py-1 rounded-full"
+              >Arduino</span
+            >
+            <span class="text-xs bg-gray-600 px-2 py-1 rounded-full"
+              >React Native</span
+            >
+          </div>
+          <div class="prose prose-invert max-w-none">
+            <p>
+              This smart home automation system allows users to control various
+              aspects of their home environment through a mobile application.
+              The system utilizes Arduino microcontrollers and various sensors
+              to monitor and control lighting, temperature, and security
+              systems.
+            </p>
+
+            <h4 class="text-xl font-semibold mt-6 mb-3">Key Features</h4>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Automated lighting control based on time and occupancy</li>
+              <li>
+                Temperature and humidity monitoring with automated HVAC control
+              </li>
+              <li>Motion detection security system with mobile alerts</li>
+              <li>
+                Voice control integration through Google Assistant and Amazon
+                Alexa
+              </li>
+              <li>Energy usage monitoring and optimization</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold mt-6 mb-3">Technologies Used</h4>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Arduino Mega for central control</li>
+              <li>ESP8266 WiFi modules for connectivity</li>
+              <li>React Native for cross-platform mobile application</li>
+              <li>Firebase for real-time database and authentication</li>
+              <li>
+                Various sensors: PIR motion, DHT22 temperature/humidity,
+                photoresistors
+              </li>
+              <li>Relay modules for controlling AC devices</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold mt-6 mb-3">
+              Challenges & Solutions
+            </h4>
+            <p>
+              One of the main challenges was ensuring reliable communication
+              between multiple IoT devices. I implemented a mesh network
+              topology using ESP8266 modules to improve reliability and range.
+              Another challenge was power management, which I addressed by
+              implementing sleep modes and optimizing code execution to reduce
+              energy consumption.
+            </p>
+          </div>
+          <div class="mt-8 flex justify-end">
+            <a
+              href="#"
+              class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full transition"
+              >View GitHub Repository</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other project modals would follow the same pattern -->
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-12">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-6 md:mb-0">
+            <a href="index.html" class="text-2xl font-bold text-blue-400"
+              >YourName<span class="text-white">.dev</span></a
+            >
+            <p class="text-gray-400 mt-2">
+              Electronics & Computer Science Student
+            </p>
+          </div>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fab fa-github text-xl"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fab fa-linkedin text-xl"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fab fa-twitter text-xl"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fas fa-envelope text-xl"></i
+            ></a>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400"
+        >
+          <p>&copy; 2025 Your Name. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

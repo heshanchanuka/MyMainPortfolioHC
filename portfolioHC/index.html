@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I.G.H.C. Karunarathna | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Typing effect for intro text
+        const text = "Electronics & Computer Science Student";
+        const typingElement = document.getElementById("typing-text");
+        let i = 0;
+
+        function typeWriter() {
+          if (i < text.length) {
+            typingElement.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 100);
+          } else {
+            setTimeout(() => {
+              typingElement.textContent = "";
+              i = 0;
+              typeWriter();
+            }, 2000);
+          }
+        }
+
+        typeWriter();
+
+        // Scroll animation
+        const scrollBtn = document.getElementById("scroll-btn");
+        scrollBtn.addEventListener("click", () => {
+          window.scrollTo({
+            top: window.innerHeight,
+            behavior: "smooth",
+          });
+        });
+      });
+    </script>
+  </head>
+  <body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav
+      class="fixed w-full bg-gray-900 bg-opacity-90 z-50 border-b border-gray-800"
+    >
+      <div
+        class="container mx-auto px-6 py-3 flex justify-between items-center"
+      >
+        <a href="index.html" class="text-2xl font-bold text-blue-400"
+          >I.G.H.C. Karunarathna<span class="text-white">.dev</span></a
+        >
+        <div class="hidden md:flex space-x-8">
+          <a
+            href="index.html"
+            class="text-blue-400 hover:text-blue-300 transition"
+            >Home</a
+          >
+          <a href="about.html" class="hover:text-blue-300 transition">About</a>
+          <a href="projects.html" class="hover:text-blue-300 transition"
+            >Projects</a
+          >
+          <a href="contacts.html" class="hover:text-blue-300 transition"
+            >Contact</a
+          >
+          <a href="admin.html" class="hover:text-blue-300 transition"
+            ><button>Admin</button></a
+          >
+        </div>
+        <div class="md:hidden">
+          <button class="text-white focus:outline-none">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header
+      class="h-screen flex items-center justify-center bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center relative"
+    >
+      <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+      <div class="z-10 text-center px-4">
+        <h1 class="text-5xl md:text-7xl font-bold mb-4">
+          Hello, I'm <span class="text-blue-400">I.G.H.C. Karunarathna</span>
+        </h1>
+        <p id="typing-text" class="text-xl md:text-2xl mb-8"></p>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+          <a
+            href="projects.html"
+            class="bg-blue-600 hover:bg-blue-700 py-3 px-8 rounded-full font-semibold transition duration-300"
+            >View My Work</a
+          >
+          <a
+            href="contact.html"
+            class="border-2 border-white hover:bg-white hover:text-gray-900 py-3 px-8 rounded-full font-semibold transition duration-300"
+            >Get In Touch</a
+          >
+        </div>
+      </div>
+      <button id="scroll-btn" class="absolute bottom-10 animate-bounce">
+        <i class="fas fa-chevron-down text-2xl"></i>
+      </button>
+    </header>
+
+    <!-- Skills Section -->
+    <section class="py-20 bg-gray-800">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-16">
+          My Technical Skills
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div
+            class="bg-gray-700 p-6 rounded-lg text-center hover:transform hover:scale-105 transition duration-300"
+          >
+            <i class="fas fa-microchip text-4xl text-blue-400 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Electronics</h3>
+            <p class="text-gray-300">
+              Circuit design, PCB layout, embedded systems
+            </p>
+          </div>
+          <div
+            class="bg-gray-700 p-6 rounded-lg text-center hover:transform hover:scale-105 transition duration-300"
+          >
+            <i class="fas fa-code text-4xl text-blue-400 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Programming</h3>
+            <p class="text-gray-300">C++, Python, JavaScript, Java</p>
+          </div>
+          <div
+            class="bg-gray-700 p-6 rounded-lg text-center hover:transform hover:scale-105 transition duration-300"
+          >
+            <i class="fas fa-database text-4xl text-blue-400 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Databases</h3>
+            <p class="text-gray-300">MySQL, MongoDB, PostgreSQL</p>
+          </div>
+          <div
+            class="bg-gray-700 p-6 rounded-lg text-center hover:transform hover:scale-105 transition duration-300"
+          >
+            <i class="fas fa-network-wired text-4xl text-blue-400 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Networking</h3>
+            <p class="text-gray-300">TCP/IP, IoT protocols, network security</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section class="py-20">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-16">Featured Projects</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+          <a href="projects.html" class="block group">
+            <div class="relative overflow-hidden rounded-lg shadow-lg">
+              <img
+                src="/api/placeholder/600/400"
+                alt="Smart Home Project"
+                class="w-full transform group-hover:scale-110 transition duration-500"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"
+              ></div>
+              <div class="absolute bottom-0 left-0 p-6">
+                <span class="bg-blue-600 text-xs px-2 py-1 rounded-full"
+                  >IoT</span
+                >
+                <h3 class="text-2xl font-bold mt-2">Smart Home Automation</h3>
+                <p class="text-gray-300 mt-2">
+                  Arduino-based home automation system with mobile app control
+                </p>
+              </div>
+            </div>
+          </a>
+          <a href="projects.html" class="block group">
+            <div class="relative overflow-hidden rounded-lg shadow-lg">
+              <img
+                src="/api/placeholder/600/400"
+                alt="Machine Learning Project"
+                class="w-full transform group-hover:scale-110 transition duration-500"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"
+              ></div>
+              <div class="absolute bottom-0 left-0 p-6">
+                <span class="bg-blue-600 text-xs px-2 py-1 rounded-full"
+                  >ML</span
+                >
+                <h3 class="text-2xl font-bold mt-2">
+                  Image Recognition System
+                </h3>
+                <p class="text-gray-300 mt-2">
+                  Deep learning project for real-time object detection
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="text-center mt-12">
+          <a
+            href="projects.html"
+            class="inline-flex items-center text-blue-400 hover:text-blue-300"
+          >
+            View All Projects
+            <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-12">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-6 md:mb-0">
+            <a href="index.html" class="text-2xl font-bold text-blue-400"
+              >YourName<span class="text-white">.dev</span></a
+            >
+            <p class="text-gray-400 mt-2">
+              Electronics & Computer Science Student
+            </p>
+          </div>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fab fa-github text-xl"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fab fa-linkedin text-xl"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fab fa-twitter text-xl"></i
+            ></a>
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition"
+              ><i class="fas fa-envelope text-xl"></i
+            ></a>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400"
+        >
+          <p>&copy; 2025 Your Name. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

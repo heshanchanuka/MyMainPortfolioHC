@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages Dashboard - Admin</title>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --dark: #111827;
+        --dark-light: #1f2937;
+        --gray: #374151;
+        --light: #f3f4f6;
+        --danger: #ef4444;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      body {
+        background: var(--dark-light);
+        color: white;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      nav {
+        background: rgba(17, 24, 39, 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid #2d3748;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .logo-blue {
+        color: #3b82f6;
+      }
+
+      .logo-white {
+        color: white;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: #3b82f6;
+      }
+
+      .nav-links .active {
+        color: #3b82f6;
+      }
+
+      .menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      main {
+        padding-top: 100px;
+        padding-bottom: 2rem;
+      }
+
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+      }
+
+      .card {
+        background: var(--dark);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .messages-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .messages-table th {
+        background: var(--primary);
+        color: white;
+        font-weight: 600;
+        text-align: left;
+        padding: 1rem;
+      }
+
+      .messages-table td {
+        padding: 1rem;
+        border-top: 1px solid var(--gray);
+      }
+
+      .message-row:hover {
+        background: rgba(55, 65, 81, 0.3);
+      }
+
+      .message-content {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .expand-btn {
+        background: none;
+        border: none;
+        color: var(--primary);
+        cursor: pointer;
+        font-size: 0.875rem;
+        padding: 0.25rem 0;
+      }
+
+      .timestamp {
+        font-size: 0.875rem;
+        color: #9ca3af;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #9ca3af;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #9ca3af;
+      }
+
+      .badge {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        background: var(--primary);
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .messages-table th:nth-child(3),
+        .messages-table td:nth-child(3) {
+          display: none;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .menu-btn {
+          display: block;
+        }
+
+        .message-content {
+          max-width: 200px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .messages-table th:nth-child(2),
+        .messages-table td:nth-child(2) {
+          display: none;
+        }
+
+        .message-content {
+          max-width: 150px;
+        }
+      }
+
+      /* Message Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: var(--dark);
+        border-radius: 8px;
+        width: 100%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid var(--gray);
+      }
+
+      .modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .modal-body {
+        padding: 1rem;
+      }
+
+      .modal-field {
+        margin-bottom: 1rem;
+      }
+
+      .modal-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #9ca3af;
+      }
+
+      .modal-value {
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .modal-footer {
+        padding: 1rem;
+        border-top: 1px solid var(--gray);
+        display: flex;
+        justify-content: flex-end;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="container nav-container">
+        <a href="index.html" class="logo">
+          <span class="logo-blue">I.G.H.C. Karunarathna</span
+          ><span class="logo-white">.dev</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="projects.html">Projects</a>
+          <a href="contacts.html">Contact</a>
+          <a href="#" class="active">Admin</a>
+        </div>
+        <button class="menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <div class="dashboard-header">
+        <h1>Contact Messages</h1>
+        <div class="badge message-count">0</div>
+      </div>
+
+      <div class="card">
+        <table class="messages-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Subject</th>
+              <th>Message</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="messagesTableBody">
+            <tr>
+              <td colspan="5" class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading messages...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <div id="messageModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Message Details</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-field">
+            <div class="modal-label">Name</div>
+            <div id="modalName" class="modal-value"></div>
+          </div>
+          <div class="modal-field">
+            <div class="modal-label">Email</div>
+            <div id="modalEmail" class="modal-value"></div>
+          </div>
+          <div class="modal-field">
+            <div class="modal-label">Subject</div>
+            <div id="modalSubject" class="modal-value"></div>
+          </div>
+          <div class="modal-field">
+            <div class="modal-label">Message</div>
+            <div id="modalMessage" class="modal-value"></div>
+          </div>
+          <div class="modal-field">
+            <div class="modal-label">Date & Time</div>
+            <div id="modalTimestamp" class="modal-value"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="closeModal" class="close-modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAKn4xguieXlXng542OikWlj3uIG8rcdmk",
+        authDomain: "myportfolio-2e918.firebaseapp.com",
+        projectId: "myportfolio-2e918",
+        storageBucket: "myportfolio-2e918.firebasestorage.app",
+        messagingSenderId: "823496686232",
+        appId: "1:823496686232:web:d12022930b0ddee0a0aeed",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      const db = firebase.firestore();
+
+      // DOM elements
+      const messagesTableBody = document.getElementById("messagesTableBody");
+      const messageCountBadge = document.querySelector(".message-count");
+      const modal = document.getElementById("messageModal");
+      const closeModalBtn = document.querySelector(".close-modal");
+      const closeModalFooterBtn = document.getElementById("closeModal");
+
+      // Modal fields
+      const modalName = document.getElementById("modalName");
+      const modalEmail = document.getElementById("modalEmail");
+      const modalSubject = document.getElementById("modalSubject");
+      const modalMessage = document.getElementById("modalMessage");
+      const modalTimestamp = document.getElementById("modalTimestamp");
+
+      // Close modal when clicking close button or outside
+      closeModalBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+      });
+
+      closeModalFooterBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("active");
+        }
+      });
+
+      // Show message details in modal
+      function showMessageDetails(message) {
+        modalName.textContent = message.name;
+        modalEmail.textContent = message.email;
+        modalSubject.textContent = message.subject;
+        modalMessage.textContent = message.message;
+        modalTimestamp.textContent =
+          message.timestamp?.toDate().toLocaleString() || "N/A";
+        modal.classList.add("active");
+      }
+
+      // Format timestamp
+      function formatTimestamp(timestamp) {
+        if (!timestamp) return "N/A";
+
+        const date = timestamp.toDate();
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) {
+          return (
+            "Today, " +
+            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          );
+        } else if (diffDays === 1) {
+          return (
+            "Yesterday, " +
+            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          );
+        } else {
+          return (
+            date.toLocaleDateString() +
+            ", " +
+            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          );
+        }
+      }
+
+      // Fetch messages from Firestore
+      db.collection("messages")
+        .orderBy("timestamp", "desc")
+        .onSnapshot(
+          (snapshot) => {
+            messagesTableBody.innerHTML = "";
+            const messageCount = snapshot.docs.length;
+            messageCountBadge.textContent = messageCount;
+
+            if (messageCount === 0) {
+              messagesTableBody.innerHTML = `
+            <tr>
+              <td colspan="5" class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No messages yet</p>
+              </td>
+            </tr>
+          `;
+              return;
+            }
+
+            snapshot.forEach((doc) => {
+              const message = doc.data();
+              const messageRow = document.createElement("tr");
+              messageRow.className = "message-row";
+
+              // Truncate message for table view
+              const truncatedMessage =
+                message.message.length > 50
+                  ? message.message.substring(0, 50) + "..."
+                  : message.message;
+
+              messageRow.innerHTML = `
+            <td>${message.name || "N/A"}</td>
+            <td>${message.email || "N/A"}</td>
+            <td>${message.subject || "N/A"}</td>
+            <td class="message-content">
+              ${truncatedMessage}
+              <button class="expand-btn">View</button>
+            </td>
+            <td class="timestamp">${formatTimestamp(message.timestamp)}</td>
+          `;
+
+              // Add event listener to view message details
+              const viewBtn = messageRow.querySelector(".expand-btn");
+              viewBtn.addEventListener("click", () => {
+                showMessageDetails(message);
+              });
+
+              messagesTableBody.appendChild(messageRow);
+            });
+          },
+          (error) => {
+            messagesTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-state">
+              <i class="fas fa-exclamation-circle"></i>
+              <p>Error loading messages: ${error.message}</p>
+            </td>
+          </tr>
+        `;
+          }
+        );
+    </script>
+  </body>
+</html>
